@@ -52,4 +52,13 @@ public class AuthenticationService implements AuthenticationProvider {
         }
         return null;
     }
+
+    public Object getCurrentUserCredentials() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            Object authenticationDetails = authentication.getCredentials();
+            return authenticationDetails;
+        }
+        return null;
+    }
 }
