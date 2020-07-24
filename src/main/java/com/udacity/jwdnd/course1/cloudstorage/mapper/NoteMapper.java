@@ -7,10 +7,10 @@ import java.util.List;
 
 @Mapper
 public interface NoteMapper {
-    @Select("SELECT * FROM NOTES")
-    List<Note> getNotes();
+    @Select("SELECT noteid, notetitle, notedescription, NOTES.userid FROM NOTES LEFT JOIN USERS ON Notes.userid = USERS.userid WHERE username = #{username}")
+    List<Note> getNotes(String username);
 
-    @Insert("INSERT INTO NOTES (notetitle, notedescription, userid) VALUES(#{noteTitle}, #{noteDescription}, #{userId})")
+    @Insert("INSERT INTO NOTES (notetitle, notedescription, userid) SELECT #{noteTitle}, #{noteDescription}, USERS.userid FROM USERS WHERE USERS.username = #{username}")
     @Options(useGeneratedKeys = true, keyProperty = "noteId")
     int insertNote(Note note);
 
