@@ -77,7 +77,14 @@
                                 <tbody>
                                     <tr th:each="note : ${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success">Edit</button>
+                                            <button
+                                                    type="button"
+                                                    class="btn btn-success"
+                                                    th:data-noteId="${note.noteId}"
+                                                    th:data-noteTitle="${note.noteTitle}"
+                                                    th:data-noteDescription="${note.noteDescription}"
+                                                    onclick="showNoteModal(this.getAttribute('data-noteId'), this.getAttribute('data-noteTitle'), this.getAttribute('data-noteDescription'))"
+                                            >Edit</button>
                                             <a class="btn btn-danger" href="#" th:href="@{/note/delete/{noteId}(noteId=${note.noteId} )}" >Delete</a>
                                         </td>
                                         <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
@@ -98,7 +105,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <form action="#" th:object="${noteForm}" th:action="@{/note}" method="POST">
-                                            <!--<input type="hidden" name="noteId" id="note-id">-->
+                                            <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
                                                 <input th:field="*{noteTitle}" type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" required>

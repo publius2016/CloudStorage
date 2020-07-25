@@ -18,7 +18,11 @@ public class NoteService {
     }
 
     public void addNote(NoteForm noteForm) {
-        noteMapper.insertNote(new Note(noteForm.getNoteTitle(), noteForm.getNoteDescription(), authenticationService.getCurrentUsername()));
+        noteMapper.insertNote(new Note(null, noteForm.getNoteTitle(), noteForm.getNoteDescription(), authenticationService.getCurrentUsername()));
+    }
+
+    public void updateNote(NoteForm noteForm) {
+        noteMapper.updateNote(new Note(noteForm.getNoteId(), noteForm.getNoteTitle(), noteForm.getNoteDescription(), null));
     }
 
     public List<Note> getNotes(String username) { return noteMapper.getNotes(username); }

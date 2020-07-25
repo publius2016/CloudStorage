@@ -23,7 +23,12 @@ public class NoteController {
 
     @PostMapping
     public String addNote(NoteForm noteForm, Model model) {
-        noteService.addNote(noteForm);
+        if (noteForm.getNoteId() != null) {
+            noteService.updateNote(noteForm);
+        } else {
+            noteService.addNote(noteForm);
+        }
+
         model.addAttribute("notes", noteService.getNotes(authenticationService.getCurrentUsername()));
         return "home";
     }

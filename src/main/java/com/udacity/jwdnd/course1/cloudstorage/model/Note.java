@@ -11,7 +11,8 @@ public class Note {
     private String noteDescription;
     private String username;
 
-    public Note(String noteTitle, String noteDescription, String username) {
+    public Note(Integer noteId, String noteTitle, String noteDescription, String username) {
+        this.noteId = noteId;
         this.noteTitle = noteTitle;
         this.noteDescription = noteDescription;
         this.username = username;
