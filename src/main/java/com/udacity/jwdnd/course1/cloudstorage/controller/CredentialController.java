@@ -13,24 +13,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/note")
-public class NoteController {
+@RequestMapping("/credential")
+public class CredentialController {
     private NoteService noteService;
     private CredentialService credentialService;
     private AuthenticationService authenticationService;
 
-    public NoteController(NoteService noteService, AuthenticationService authenticationService, CredentialService credentialService) {
+    public CredentialController(CredentialService credentialService, AuthenticationService authenticationService, NoteService noteService) {
         this.noteService = noteService;
         this.credentialService = credentialService;
         this.authenticationService = authenticationService;
     }
 
     @PostMapping
-    public String addNote(NoteForm noteForm, CredentialForm credentialForm, Model model) {
-        if (noteForm.getNoteId() != null) {
-            noteService.updateNote(noteForm);
+    public String addCredential(NoteForm noteForm, CredentialForm credentialForm, Model model) {
+        if (credentialForm.getCredentialId() != null) {
+            credentialService.updateCredential(credentialForm);
         } else {
-            noteService.addNote(noteForm);
+            credentialService.addCredential(credentialForm);
         }
 
         model.addAttribute("notes", noteService.getNotes(authenticationService.getCurrentUsername()));
@@ -38,9 +38,9 @@ public class NoteController {
         return "home";
     }
 
-    @GetMapping("/delete/{noteId}")
-    public String deleteNote(NoteForm noteForm, CredentialForm credentialForm, @PathVariable("noteId") String noteId, Model model) {
-        noteService.deleteNote(noteId);
+    @GetMapping("/delete/{credentialId}")
+    public String deleteCredential(NoteForm noteForm, CredentialForm credentialForm, @PathVariable("credentialId") String credentialId, Model model) {
+        credentialService.deleteCredential(credentialId);
         model.addAttribute("notes", noteService.getNotes(authenticationService.getCurrentUsername()));
         model.addAttribute("credentials", credentialService.getCredentials(authenticationService.getCurrentUsername()));
         return "home";
