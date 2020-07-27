@@ -83,7 +83,10 @@
                                                     th:data-noteId="${note.noteId}"
                                                     th:data-noteTitle="${note.noteTitle}"
                                                     th:data-noteDescription="${note.noteDescription}"
-                                                    onclick="showNoteModal(this.getAttribute('data-noteId'), this.getAttribute('data-noteTitle'), this.getAttribute('data-noteDescription'))"
+                                                    onclick="showNoteModal(
+                                                        this.getAttribute('data-noteId'),
+                                                        this.getAttribute('data-noteTitle'),
+                                                        this.getAttribute('data-noteDescription'))"
                                             >Edit</button>
                                             <a class="btn btn-danger" href="#" th:href="@{/note/delete/{noteId}(noteId=${note.noteId} )}" >Delete</a>
                                         </td>
@@ -143,8 +146,20 @@
                                 <tbody>
                                 <tr th:each="credential : ${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
-                                        <a class="btn btn-danger">Delete</a>
+                                        <button
+                                                type="button"
+                                                class="btn btn-success"
+                                                th:data-credentialId="${credential.credentialId}"
+                                                th:data-url="${credential.url}"
+                                                th:data-username="${credential.username}"
+                                                th:data-decryptedPassword="${credential.decryptedPassword}"
+                                                onclick="showCredentialModal(
+                                                    this.getAttribute('data-credentialId'),
+                                                    this.getAttribute('data-url'),
+                                                    this.getAttribute('data-username'),
+                                                    this.getAttribute('data-decryptedPassword'))"
+                                        >Edit</button>
+                                        <a class="btn btn-danger" th:href="@{/credential/delete/{credentialId}(credentialId=${credential.credentialId} )}">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credential.url}">Example Credential URL</th>
                                     <td th:text="${credential.username}">Example Credential Username</td>

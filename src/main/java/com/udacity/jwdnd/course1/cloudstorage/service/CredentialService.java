@@ -39,7 +39,7 @@ public class CredentialService {
 
     public void updateCredential(CredentialForm credentialForm) {
         String encodedKey = encryptionService.getEncodedKey();
-        String encryptedPassword = encryptionService.encryptValue(credentialForm.getPassword(), encodedKey);
+        String encryptedPassword = encryptionService.encryptValue(credentialForm.getDecryptedPassword(), encodedKey);
 
         credentialMapper.updateCredential(
                 new Credential(
