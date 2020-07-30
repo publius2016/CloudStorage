@@ -10,6 +10,7 @@ import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -26,10 +27,11 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String getHome(NoteForm noteForm, CredentialForm credentialForm, FileForm fileForm,  Model model) {
+    public String getHome(NoteForm noteForm, CredentialForm credentialForm, FileForm fileForm, Model model, @RequestParam(required=false) String message) {
         model.addAttribute("notes", noteService.getNotes(authenticationService.getCurrentUsername()));
         model.addAttribute("credentials", credentialService.getCredentials(authenticationService.getCurrentUsername()));
         model.addAttribute("files", fileService.getFileNames(authenticationService.getCurrentUsername()));
+        model.addAttribute("message", message);
         return "home";
     }
 }
