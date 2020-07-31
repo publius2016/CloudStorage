@@ -21,20 +21,20 @@ public class CredentialService {
     }
 
     public void addCredential(CredentialForm credentialForm) {
-        String encodedKey = encryptionService.getEncodedKey();
-        String encryptedPassword = encryptionService.encryptValue(credentialForm.getDecryptedPassword(), encodedKey);
+            String encodedKey = encryptionService.getEncodedKey();
+            String encryptedPassword = encryptionService.encryptValue(credentialForm.getDecryptedPassword(), encodedKey);
 
-        credentialMapper.insertCredential(
-                new Credential(
-                        null,
-                        credentialForm.getUrl(),
-                        credentialForm.getUsername(),
-                        encodedKey,
-                        encryptedPassword,
-                        null,
-                        authenticationService.getCurrentUsername(),
-                        null)
-        );
+            credentialMapper.insertCredential(
+                    new Credential(
+                            null,
+                            credentialForm.getUrl(),
+                            credentialForm.getUsername(),
+                            encodedKey,
+                            encryptedPassword,
+                            null,
+                            authenticationService.getCurrentUsername(),
+                            null)
+            );
     }
 
     public void updateCredential(CredentialForm credentialForm) {

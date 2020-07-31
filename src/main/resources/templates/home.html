@@ -10,8 +10,11 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
-            <div class="alert alert-dark" th:if="${message}">
-                <span th:text="${message}">Your update  was successful</span>
+            <div class="alert alert-success" th:if="${successMessage}">
+                <span th:text="${successMessage}">Your update was successful.</span>
+            </div>
+            <div class="alert alert-danger" th:if="${errorMessage}">
+                <span th:text="${errorMessage}">There was an error while performing the update.</span>
             </div>
             <div id="logoutDiv">
                 <form action="#" th:action="@{/logout}" method="POST">

@@ -27,11 +27,16 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String getHome(NoteForm noteForm, CredentialForm credentialForm, FileForm fileForm, Model model, @RequestParam(required=false) String message) {
+    public String getHome(NoteForm noteForm,
+                          CredentialForm credentialForm,
+                          FileForm fileForm, Model model,
+                          @RequestParam(required=false) String successMessage,
+                          @RequestParam(required=false) String errorMessage) {
         model.addAttribute("notes", noteService.getNotes(authenticationService.getCurrentUsername()));
         model.addAttribute("credentials", credentialService.getCredentials(authenticationService.getCurrentUsername()));
         model.addAttribute("files", fileService.getFileNames(authenticationService.getCurrentUsername()));
-        model.addAttribute("message", message);
+        model.addAttribute("successMessage", successMessage);
+        model.addAttribute("errorMessage", errorMessage);
         return "home";
     }
 }

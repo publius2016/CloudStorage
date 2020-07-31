@@ -19,19 +19,29 @@ public class CredentialController {
 
     @PostMapping
     public String addCredential(CredentialForm credentialForm) {
-        if (credentialForm.getCredentialId() != null) {
-            credentialService.updateCredential(credentialForm);
-        } else {
-            credentialService.addCredential(credentialForm);
+        try {
+            if (credentialForm.getCredentialId() != null) {
+                credentialService.updateCredential(credentialForm);
+                return "redirect:/home?successMessage=Your credentials have been updated successfully.";
+            } else {
+                credentialService.addCredential(credentialForm);
+                return "redirect:/home?successMessage=Your credentials have been added successfully.";
+            }
+        } catch (Exception e) {
+            if (e.getLocalizedMessage().contains("Unique index or primary key violation")) {
+                return "redirect:/home?errorMessage=Duplicate usernames are not permitted. Please enter a unique username.";
+            }
+            return "redirect:/home?errorMessage=Something went wrong while saving your credentials";
         }
-
-        return "redirect:/home";
     }
 
     @GetMapping("/delete/{credentialId}")
     public String deleteCredential(@PathVariable("credentialId") String credentialId) {
-        credentialService.deleteCredential(credentialId);
-
-        return "redirect:/home";
+        try {
+            credentialService.deleteCredential(credentialId);
+            return "redirect:/home?successMessage=Your credentials were deleted successfully.";
+        } catch (Exception e) {
+            return "redirect:/home?errorMessage=Something went wrong while deleting your credentials.";
+        }
     }
 }

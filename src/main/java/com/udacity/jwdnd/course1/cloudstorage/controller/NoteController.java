@@ -23,13 +23,13 @@ public class NoteController {
         try {
             if (noteForm.getNoteId() != null) {
                 noteService.updateNote(noteForm);
-                return "redirect:/home?message=You have successfully updated your note.";
+                return "redirect:/home?successMessage=You have updated your note successfully.";
             } else {
                 noteService.addNote(noteForm);
-                return "redirect:/home?message=You have successfully added your note.";
+                return "redirect:/home?successMessage=You have added your note successfully.";
             }
         } catch (Error error) {
-            return "redirect:/home?message=Something went wrong and we couldn't save your note.";
+            return "redirect:/home?errorMessage=Something went wrong while saving your note.";
         }
     }
 
@@ -37,9 +37,9 @@ public class NoteController {
     public String deleteNote(@PathVariable("noteId") String noteId) {
         try {
             noteService.deleteNote(noteId);
-            return "redirect:/home?message=You have successfully deleted your note.";
+            return "redirect:/home?successMessage=You have note has been deleted successfully.";
         } catch (Error error) {
-            return "redirect:/home?message=Something went wrong and we couldn't delete your note.";
+            return "redirect:/home?errorMessage=Something went wrong while deleting your note.";
         }
     }
 }

@@ -23,26 +23,43 @@ public class FileController {
 
     @GetMapping(value = "/{fileId}", produces = MediaType.ALL_VALUE)
     public @ResponseBody ResponseEntity<byte[]> getFile(@PathVariable("fileId") Integer fileId) {
-        File file = fileService.getFile(fileId);
+        try {
+            File file = fileService.getFile(fileId);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", file.getContentType() + "; charset=UTF-8");
-        headers.add("Accepts", file.getContentType());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", file.getContentType() + "; charset=UTF-8");
+            headers.add("Accepts", file.getContentType());
 
-        return new ResponseEntity<>(file.getFileData(), headers, HttpStatus.OK);
+            return new ResponseEntity<>(file.getFileData(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping(consumes = MediaType.ALL_VALUE)
     public String insertFile(@RequestParam("fileUpload") MultipartFile fileForm) throws IOException {
-        fileService.addFile(fileForm);
-
-        return "redirect:/home";
+        try {
+            if (!fileForm.getOriginalFilename().equals("")) {
+                fileService.addFile(fileForm);
+                return "redirect:/home?successMessage=Your file has been added successfully.";
+            } else {
+              return "redirect:/home?errorMessage=Please choose a file to upload.";
+            }
+        } catch(Exception e) {
+            if (e.getLocalizedMessage().contains("Unique index or primary key violation")) {
+                return "redirect:/home?errorMessage=Duplicate files are not permitted. Please upload a unique file.";
+            }
+            return "redirect:/home?errorMessage=Something went wrong while adding your file.";
+        }
     }
 
     @GetMapping("/delete/{fileId}")
     public String deleteFile(@PathVariable("fileId") Integer fileId) {
-        fileService.deleteFile(fileId);
-
-        return "redirect:/home";
+        try {
+            fileService.deleteFile(fileId);
+            return "redirect:/home?successMessage=Your file has been deleted successfully.";
+        } catch(Exception e) {
+            return "redirect:/home?errorMessage=Something went wrong while deleting your file.";
+        }
     }
 }
