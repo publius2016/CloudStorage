@@ -54,9 +54,9 @@ public class CredentialService {
         );
     }
 
-    public List<Credential> getCredentials(String username) {
+    public List<Credential> getCredentials() {
         List<Credential> credentialsWithDecryptedValues = credentialMapper
-                .getCredentials(username)
+                .getCredentials(authenticationService.getCurrentUsername())
                 .stream()
                 .map(credential -> {
                     credential.setDecryptedPassword(encryptionService.decryptValue(credential.getPassword(), credential.getKey()));
@@ -68,4 +68,18 @@ public class CredentialService {
     }
 
     public void deleteCredential(String credentialId) { credentialMapper.deleteCredential(credentialId); }
+
+    public Boolean isUpdatedCredentialUsernameSame(CredentialForm credentialForm, List<Credential> credentials) {
+        return credentials.stream()
+                    .filter(credential -> credential.getCredentialId().equals(credentialForm.getCredentialId()))
+                    .map(credential -> credential.getUsername())
+                    .anyMatch(credential -> credential.equals(credentialForm.getUsername()));
+    }
+
+    public Boolean isNewUsernameDuplicate(CredentialForm credentialForm, List<Credential> credentials) {
+        return credentials.stream()
+                    .map(credential -> credential.getUsername())
+                    .collect(Collectors.toList())
+                    .contains(credentialForm.getUsername());
+    }
 }

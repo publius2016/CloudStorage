@@ -33,7 +33,7 @@ public class HomeController {
                           @RequestParam(required=false) String successMessage,
                           @RequestParam(required=false) String errorMessage) {
         model.addAttribute("notes", noteService.getNotes(authenticationService.getCurrentUsername()));
-        model.addAttribute("credentials", credentialService.getCredentials(authenticationService.getCurrentUsername()));
+        model.addAttribute("credentials", credentialService.getCredentials());
         model.addAttribute("files", fileService.getFileNames(authenticationService.getCurrentUsername()));
         model.addAttribute("successMessage", successMessage);
         model.addAttribute("errorMessage", errorMessage);
