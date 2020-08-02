@@ -10,15 +10,15 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
-            <div class="alert alert-success" th:if="${successMessage}">
+            <div id="success-message" class="alert alert-success" th:if="${successMessage}">
                 <span th:text="${successMessage}">Your update was successful.</span>
             </div>
-            <div class="alert alert-danger" th:if="${errorMessage}">
+            <div id="error-message" class="alert alert-danger" th:if="${errorMessage}">
                 <span th:text="${errorMessage}">There was an error while performing the update.</span>
             </div>
             <div id="logoutDiv">
                 <form action="#" th:action="@{/logout}" method="POST">
-                    <button type="submit" class="btn btn-secondary float-right">Logout</button>
+                    <button type="submit" id="logout-button" class="btn btn-secondary float-right">Logout</button>
                 </form>
             </div>
             <div id="contentDiv" style="clear: right;">
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                        <button id="add-note-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
 
@@ -128,7 +128,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
+                                        <button id="note-submit-proxy" type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
                                     </div>
                                 </div>
                             </div>
