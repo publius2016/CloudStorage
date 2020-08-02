@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/file")
@@ -39,16 +40,18 @@ public class FileController {
     @PostMapping(consumes = MediaType.ALL_VALUE)
     public String insertFile(@RequestParam("fileUpload") MultipartFile fileForm) throws IOException {
         try {
-            if (!fileForm.getOriginalFilename().equals("")) {
+            List<String> fileNames = fileService.getFileNames(fileService.getFiles());
+            Boolean isFileNameDuplicate = fileService.isFileNameDuplicate(fileNames, fileForm);
+
+            if (!fileForm.getOriginalFilename().equals("") && !isFileNameDuplicate) {
                 fileService.addFile(fileForm);
                 return "redirect:/home?successMessage=Your file has been added successfully.";
+            } else if (isFileNameDuplicate) {
+                return "redirect:/home?errorMessage=File already exists. Please upload a unique file.";
             } else {
-              return "redirect:/home?errorMessage=Please choose a file to upload.";
+                return "redirect:/home?errorMessage=Please choose a file to upload.";
             }
         } catch(Exception e) {
-            if (e.getLocalizedMessage().contains("Unique index or primary key violation")) {
-                return "redirect:/home?errorMessage=Duplicate files are not permitted. Please upload a unique file.";
-            }
             return "redirect:/home?errorMessage=Something went wrong while adding your file.";
         }
     }

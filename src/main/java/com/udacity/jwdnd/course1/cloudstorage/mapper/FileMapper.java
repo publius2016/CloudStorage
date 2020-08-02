@@ -13,7 +13,7 @@ public interface FileMapper {
             @Result(property = "fileName", column = "filename"),
     })
     @Select("SELECT fileid, filename FROM FILES LEFT JOIN USERS ON FILES.userid = USERS.userid WHERE USERS.username = #{authenticatedUsername}")
-    List<File> getFileNames(String authenticatedUsername);
+    List<File> getFiles(String authenticatedUsername);
 
     @Results(value = {
             @Result(property = "fileId", column = "fileid"),

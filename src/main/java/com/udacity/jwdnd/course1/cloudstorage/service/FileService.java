@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -34,8 +35,16 @@ public class FileService {
         );
     }
 
-    public List<File> getFileNames(String username) {
-        return fileMapper.getFileNames(username);
+    public List<File> getFiles() {
+        return fileMapper.getFiles(authenticationService.getCurrentUsername());
+    }
+
+    public List<String> getFileNames(List<File> files) {
+        return files.stream().map(file -> file.getFileName()).collect(Collectors.toList());
+    }
+
+    public Boolean isFileNameDuplicate(List<String> fileNames, MultipartFile fileForm) {
+        return fileNames.contains(fileForm.getOriginalFilename());
     }
 
     public File getFile(Integer fileId) { return fileMapper.getFileData(fileId); }

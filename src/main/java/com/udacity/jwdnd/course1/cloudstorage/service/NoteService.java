@@ -25,7 +25,7 @@ public class NoteService {
         noteMapper.updateNote(new Note(noteForm.getNoteId(), noteForm.getNoteTitle(), noteForm.getNoteDescription(), null));
     }
 
-    public List<Note> getNotes(String username) { return noteMapper.getNotes(username); }
+    public List<Note> getNotes() { return noteMapper.getNotes(authenticationService.getCurrentUsername()); }
 
     public void deleteNote(String noteId) { noteMapper.deleteNote(noteId); }
 }
