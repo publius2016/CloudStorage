@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import lombok.Getter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,6 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
+@Getter
 public class HomePage {
     @FindBy(id="logout-button")
     private WebElement logoutButton;
@@ -35,6 +37,9 @@ public class HomePage {
     @FindBy(css=".btn-edit")
     private List<WebElement> noteEditButton;
 
+    @FindBy(css=".btn-delete")
+    private List<WebElement> noteDeleteButton;
+
     public void selectNotesTab() {
         notesTab.click();
     }
@@ -54,6 +59,10 @@ public class HomePage {
 
     public void selectEditNote() {
         noteEditButton.get(0).click();
+    }
+
+    public void selectDeleteNote() {
+        noteDeleteButton.get(0).click();
     }
 
     public String getNotesTitleDisplay() {

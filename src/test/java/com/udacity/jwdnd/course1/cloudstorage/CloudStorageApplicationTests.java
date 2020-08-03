@@ -8,54 +8,96 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
+import java.util.ArrayList;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CloudStorageApplicationTests {
 
 	@LocalServerPort
 	private Integer port;
-	private static WebDriver driver;
+	private WebDriver driver;
 	private HomePage homePage;
 	private LoginPage loginPage;
 	private SignupPage signupPage;
 	private WebDriverWait wait;
+	private String davidUserFirstName = "David";
+	private String davidUserLastName = "Ames";
+	private String davidUserUsername = "dames";
+	private String davidUserPassword = "vanilla";
+	private String tylerUserFirstName = "Tyler";
+	private String tylerUserLastName = "Durden";
+	private String tylerUserUsername = "tdurden";
+	private String tylerUserPassword = "fight";
+	private String durdenTitle = "On civilization";
+	private String durdenDescription = "Reject the basic assumptions of civilization, especially the importance of material possessions.";
+	private String durdenEditNoteTitle = "On Losing";
+	private String durdenEditNoteDescription = "It’s only after we’ve lost everything that we’re free to do anything.";
 
-	@BeforeEach
-	public void beforeEach() {
+	@BeforeAll
+	public void beforeAll() throws InterruptedException {
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
 		loginPage = new LoginPage(driver);
 		signupPage = new SignupPage(driver);
 		homePage = new HomePage(driver);
-		wait = new WebDriverWait(driver, 10000);
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		signupPage.signUpNewUser(
+				davidUserFirstName,
+				davidUserLastName,
+				davidUserUsername,
+				davidUserPassword);
+		Thread.sleep(1000);
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		signupPage.signUpNewUser(
+				tylerUserFirstName,
+				tylerUserLastName,
+				tylerUserUsername,
+				tylerUserPassword);
 	}
 
-	@AfterEach
-	public void afterEach() {
+	@AfterAll
+	public void afterAll() {
 		if (this.driver != null) {
 			driver.quit();
 		}
 	}
 
+	@BeforeEach
+	public void beforeEach() throws  InterruptedException{
+		driver.get("http://localhost:" + this.port + "/login");
+		Thread.sleep(1000);
+
+		loginPage.loginUser(tylerUserUsername, tylerUserPassword);
+		Thread.sleep(1000);
+	}
+
+	@AfterEach
+	public void afterEach() {
+		if(driver.getTitle().equals("Home")) {
+			homePage.logoutUser();
+		}
+	}
+
 	@Test
 	public void shouldNotAccessHomePageIfNotLoggedIn() {
+		if(driver.getTitle().equals("Home")) {
+			homePage.logoutUser();
+		}
 		driver.get("http://localhost:" + this.port + "/home");
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
 	@Test
-	public void shouldAllowAccessHomePageAfterLoginNoAccessAfterLogout() throws InterruptedException{
-		String firstName = "David";
-		String lastName = "Ames";
-		String username = "dames";
-		String password = "vanilla";
-
-	    driver.get("http://localhost:" + this.port + "/signup");
-		signupPage.signUpNewUser(firstName, lastName, username, password);
-		Thread.sleep(1000);
+	public void getLoginPage() {
+		driver.get("http://localhost:" + this.port + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());
+	}
 
-		loginPage.loginUser(username, password);
-		Thread.sleep(1000);
+	@Test
+	public void shouldAllowAccessHomePageAfterLoginNoAccessAfterLogout() throws InterruptedException{
 		Assertions.assertEquals("Home", driver.getTitle());
 
 		homePage.logoutUser();
@@ -69,20 +111,6 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void shouldCreateNewNote() throws InterruptedException {
-		String durdenTitle = "On civilization";
-		String durdenDescription = "Reject the basic assumptions of civilization, especially the importance of material possessions.";
-        String firstName = "Tyler";
-        String lastName = "Durden";
-        String username = "tdurden";
-        String password = "fight";
-
-		driver.get("http://localhost:" + this.port + "/signup");
-		signupPage.signUpNewUser(firstName, lastName, username, password);
-		Thread.sleep(1000);
-
-		loginPage.loginUser(username, password);
-		Thread.sleep(1000);
-
 		homePage.selectNotesTab();
 		Thread.sleep(1000);
 
@@ -101,13 +129,13 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void shouldEditExistingNote() throws InterruptedException {
-		String durdenEditNoteTitle = "On Losing";
-		String durdenEditNoteDescription = "It’s only after we’ve lost everything that we’re free to do anything.";
-		String username = "tdurden";
-		String password = "fight";
+		homePage.selectNotesTab();
+		Thread.sleep(1000);
 
-		driver.get("http://localhost:" + this.port + "/login");
-		loginPage.loginUser(username, password);
+		homePage.selectAddNote();
+		Thread.sleep(1000);
+
+		homePage.submitNewNote(durdenTitle, durdenDescription);
 		Thread.sleep(1000);
 
 		homePage.selectNotesTab();
@@ -127,8 +155,32 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void getLoginPage() {
-		driver.get("http://localhost:" + this.port + "/login");
-		Assertions.assertEquals("Login", driver.getTitle());
+	public void shouldDeleteExistingNote() throws InterruptedException {
+		homePage.logoutUser();
+		Thread.sleep(1000);
+
+		loginPage.loginUser(davidUserUsername, davidUserPassword);
+		Thread.sleep(1000);
+
+		homePage.selectNotesTab();
+		Thread.sleep(1000);
+
+		homePage.selectAddNote();
+		Thread.sleep(1000);
+
+		homePage.submitNewNote(durdenTitle, durdenDescription);
+		Thread.sleep(1000);
+
+		homePage.selectNotesTab();
+		Thread.sleep(1000);
+
+		homePage.selectDeleteNote();
+		Thread.sleep(1000);
+
+		homePage.selectNotesTab();
+		Thread.sleep(1000);
+
+		Assertions.assertEquals(new ArrayList<>(), homePage.getNoteEditButton());
+		Assertions.assertEquals(new ArrayList<>(), homePage.getNoteDeleteButton());
 	}
 }
