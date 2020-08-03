@@ -33,6 +33,13 @@ class CloudStorageApplicationTests {
 	private String durdenDescription = "Reject the basic assumptions of civilization, especially the importance of material possessions.";
 	private String durdenEditNoteTitle = "On Losing";
 	private String durdenEditNoteDescription = "It’s only after we’ve lost everything that we’re free to do anything.";
+	private String url = "test.com";
+	private String username = "user1";
+	private String password = "123";
+	private String username2 = "user2";
+	private String editUrl = "testAgain.com";
+	private String editUsername = "userEdit";
+	private String editPassword = "456";
 
 	@BeforeAll
 	public void beforeAll() throws InterruptedException {
@@ -182,5 +189,80 @@ class CloudStorageApplicationTests {
 
 		Assertions.assertEquals(new ArrayList<>(), homePage.getNoteEditButton());
 		Assertions.assertEquals(new ArrayList<>(), homePage.getNoteDeleteButton());
+	}
+
+	@Test
+	public void shouldCreateNewCredential() throws InterruptedException {
+		homePage.selectCredentialsTab();
+		Thread.sleep(1000);
+
+		homePage.selectAddCredentials();
+		Thread.sleep(1000);
+
+		homePage.submitNewCredentials(url, username, password);
+		Thread.sleep(1000);
+
+		homePage.selectCredentialsTab();
+		Thread.sleep(1000);
+
+		Assertions.assertTrue(homePage.getCredentialsUrls().size() > 0);
+		Assertions.assertTrue(homePage.getCredentialsUsernames().size() > 0);
+	}
+
+	@Test
+	public void shouldEditExistingCredential() throws InterruptedException {
+		homePage.selectCredentialsTab();
+		Thread.sleep(1000);
+
+		homePage.selectAddCredentials();
+		Thread.sleep(1000);
+
+		homePage.submitNewCredentials(url, username2, password);
+		Thread.sleep(1000);
+
+		homePage.selectCredentialsTab();
+		Thread.sleep(1000);
+
+		homePage.selectEditCredential();
+		Thread.sleep(1000);
+
+		homePage.submitNewCredentials(editUrl, editUsername, editPassword);
+		Thread.sleep(1000);
+
+		homePage.selectCredentialsTab();
+		Thread.sleep(1000);
+
+		Assertions.assertEquals(editUrl, homePage.getLastCredentialUrlDisplay());
+		Assertions.assertEquals(editUsername, homePage.getLastCredentialsUsernameDisplay());
+	}
+
+	@Test
+	public void shouldDeleteExistingCredential() throws InterruptedException {
+		homePage.logoutUser();
+		Thread.sleep(1000);
+
+		loginPage.loginUser(davidUserUsername, davidUserPassword);
+		Thread.sleep(1000);
+
+		homePage.selectCredentialsTab();
+		Thread.sleep(1000);
+
+		homePage.selectAddCredentials();
+		Thread.sleep(1000);
+
+		homePage.submitNewCredentials(url, username, password);
+		Thread.sleep(1000);
+
+		homePage.selectCredentialsTab();
+		Thread.sleep(1000);
+
+		homePage.selectDeleteCredential();
+		Thread.sleep(1000);
+
+		homePage.selectCredentialsTab();
+		Thread.sleep(1000);
+
+		Assertions.assertEquals(new ArrayList<>(), homePage.getCredentialsEditButton());
+		Assertions.assertEquals(new ArrayList<>(), homePage.getCredentialsDeleteButton());
 	}
 }
