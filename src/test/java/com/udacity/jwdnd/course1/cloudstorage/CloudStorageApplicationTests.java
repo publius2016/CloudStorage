@@ -100,6 +100,33 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
+	public void shouldEditExistingNote() throws InterruptedException {
+		String durdenEditNoteTitle = "On Losing";
+		String durdenEditNoteDescription = "It’s only after we’ve lost everything that we’re free to do anything.";
+		String username = "tdurden";
+		String password = "fight";
+
+		driver.get("http://localhost:" + this.port + "/login");
+		loginPage.loginUser(username, password);
+		Thread.sleep(1000);
+
+		homePage.selectNotesTab();
+		Thread.sleep(1000);
+
+		homePage.selectEditNote();
+		Thread.sleep(1000);
+
+		homePage.submitNewNote(durdenEditNoteTitle, durdenEditNoteDescription);
+		Thread.sleep(1000);
+
+		homePage.selectNotesTab();
+		Thread.sleep(1000);
+
+		Assertions.assertEquals(durdenEditNoteTitle, homePage.getNotesTitleDisplay());
+		Assertions.assertEquals(durdenEditNoteDescription, homePage.getNotesDescriptionDisplay());
+	}
+
+	@Test
 	public void getLoginPage() {
 		driver.get("http://localhost:" + this.port + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());

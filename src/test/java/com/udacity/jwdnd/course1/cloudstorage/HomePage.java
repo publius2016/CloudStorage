@@ -32,6 +32,9 @@ public class HomePage {
     @FindBy(css="tbody tr td:nth-of-type(2)")
     private List<WebElement> noteDescriptions;
 
+    @FindBy(css=".btn-edit")
+    private List<WebElement> noteEditButton;
+
     public void selectNotesTab() {
         notesTab.click();
     }
@@ -41,9 +44,16 @@ public class HomePage {
     }
 
     public void submitNewNote(String title, String description) {
+        noteTitleInput.clear();
+        noteDescriptionInput.clear();
+
         noteTitleInput.sendKeys(title);
         noteDescriptionInput.sendKeys(description);
         noteSubmit.click();
+    }
+
+    public void selectEditNote() {
+        noteEditButton.get(0).click();
     }
 
     public String getNotesTitleDisplay() {
