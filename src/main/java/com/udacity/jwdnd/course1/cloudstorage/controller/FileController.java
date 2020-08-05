@@ -30,6 +30,7 @@ public class FileController {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Type", file.getContentType() + "; charset=UTF-8");
             headers.add("Accepts", file.getContentType());
+            headers.add("Content-Disposition", "attachment");
 
             return new ResponseEntity<>(file.getFileData(), headers, HttpStatus.OK);
         } catch (Exception e) {
